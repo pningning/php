@@ -49,7 +49,8 @@ $length = count($arr);
         <li><a href="http://">生鲜</a></li>
         <li><a href="http://">全球购</a></li>
         <li><a href="http://">京东金融</a></li>       -->
-        <div class="clear"></div>
+        <!-- <div class="clear"></div> -->
+        <br class="clear" />
         <!-- 清除浮动 -->
     </ul>
 </body>
