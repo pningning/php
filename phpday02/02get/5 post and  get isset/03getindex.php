@@ -1,10 +1,12 @@
 <?php 
-    if( isset($_GET["t1"]) && strlen(trim($_GET["t1"])) !=0  
+if( isset($_GET["t1"]) && strlen(trim($_GET["t1"])) !=0
     && isset($_GET["t2"]) && strlen(trim($_GET["t2"])) !=0
-    ) {
-        $t1 = $_GET["t1"];
-        $t2 = $_GET["t2"];
-    }
+) {
+    $t1 = $_GET["t1"];
+    $t2 = $_GET["t2"];
+}else{
+    exit("您没有访问的权限");
+}
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +19,7 @@
 </head>
 <body>
     <h1>您输入的内容为：</h1>
-    <h1>t1:<?php echo $t1 ?></h1>
+    <h1>t1: <?php echo $t1 ?></h1>
     <h1>t2: <?php echo $t2 ?></h1>
 </body>
 </html>
