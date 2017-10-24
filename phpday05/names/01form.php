@@ -8,26 +8,26 @@
 </head>
 <body>
     <form action="01names.php" method="get" >
-    <table>
-        <tr>
-            <td>编号：<input type="text" name="bh"></td>
-        </tr>
-        <tr>
-            <td>姓名：<input type="text" name="name"></td>
-        </tr>
-        <tr>
-            <td>年龄：<input type="text" name="age"></td>
-        </tr>
-        <tr>
-            <td>邮箱：<input type="text" name="email"></td>
-        </tr>
-        <tr>
-            <td>网址：<input type="text" name="http"></td>
-        </tr>
-        <tr>
-          <td><input type="submit"></td>
-        </tr>
-    </table>
+        <table>
+            <tr>
+                <td>编号：<input type="text" name="bh"></td>
+            </tr>
+            <tr>
+                <td>姓名：<input type="text" name="name"></td>
+            </tr>
+            <tr>
+                <td>年龄：<input type="text" name="age"></td>
+            </tr>
+            <tr>
+                <td>邮箱：<input type="text" name="email"></td>
+            </tr>
+            <tr>
+                <td>网址：<input type="text" name="http"></td>
+            </tr>
+            <tr>
+              <td><input type="submit"></td>
+            </tr>
+        </table>
     </form>
 </body>
 </html>

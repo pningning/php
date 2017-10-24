@@ -11,8 +11,10 @@
     // 获取到文件，得到一个字符串
     $str = file_get_contents('names.txt');
 
-    echo $str;
+    // echo $str;
+    // 
     $arr = explode("\n",$str);
+    // 遍历数组，把里面的值以| 分割，存到另一个数组中
     foreach($arr as $value){
         if(!$value) continue;
         $arr2[] = explode('|',$value);

@@ -1,11 +1,11 @@
-<?php 
+<?php   
+    
     $str = file_get_contents('names.txt');
     $arr = explode("\n",$str);
     foreach($arr as $value) {
         if(!$value) continue;
         $arr2[] = explode('|',$value);
     }
-    $arr2[] = $_GET;
 ?>
 <!DOCTYPE html>
 <html lang="en">
