@@ -18,17 +18,20 @@
 		}
 
 		foreach($arr2 as $value2) {
-			if($value2[0] === $_POST['name'] && $value2[1] === $_POST["password"]) {
-				// $GLOBALS['login'] = 'login.php';
-				$GLOBALS['message'] = '登录成功';
-				break;
-			}else {
-				$GLOBALS['message'] = '用户名不存在或密码错误';
+			if($value2[0] !== $_POST['name']) {
+				$GLOBALS['message'] = "用户名不存在";
+				return;
 			}
+			if($value2[0] === $_POST['name'] && $value2[1] !== $_POST["password"]) {
+				$GLOBALS['message'] = "密码错误";
+				return;
+			}
+			$GLOBALS['message'] = '登录成功';
+			return;
 		}
 
-
 	}
+	
 	if($_SERVER['REQUEST_METHOD'] === 'POST') {
 		fn();
 	} 
