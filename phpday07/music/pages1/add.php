@@ -67,23 +67,34 @@ function postback() {
   //把音乐从临时文件里面存到网络范围内文件
   $source_path = uniqid() . '-' . $source['name'];
   $target = './uploads/' . $source_path;
-  if(!move_uploaded_file($_FILES['tmp_name'],$target)) {
+  if(!move_uploaded_file($source['tmp_name'],$target)) {
     $GLOBALS['message'] = '上传音乐失败';
     return;
   }
   //==============图片音乐都上传好了=============
-  //读取到存储文件的文件的内容
-  
+  //读取到存储文件的文件的内容，解码成数组
+  $origin = json_decode(file_get_contents('storage.json'),true);
+  //把提交的信息以数组的形式存储到读取的内容中
+  $origin[] = array(
+    "id" => uniqid(),
+    "title" => $_POST['title'],
+    "artist" => $_POST['artist'],
+    "images" => '/music/pages1/uploads/' . $images_path,
+    "source" => '/music/pages1/uploads/' . $source_path
+    );
 
-  echo '好了';
+  //把数组编译为json格式的字符串
+  $json = json_encode($origin);
 
+  //把内容保存到文件中
+  file_put_contents('storage.json',$json);
+  //页面跳转，设置请求头
+  header('Location: list.php');
 
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
   postback();
-  // echo '你好';
-  var_dump($_FILES['source']);
 }
 ?>
 
