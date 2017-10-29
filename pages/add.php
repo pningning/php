@@ -52,7 +52,6 @@ function postadd() {
   }
   //2.开始增加
   $query = mysqli_query($conn, "insert into users values (null, '{$name}', '{$gender}', '{$birthday}', '{$avatar}');");
-  var_dump("insert into users values (null, '{$name}', '{$gender}', '{$birthday}', '{$avatar}');");
   //如果增加的内容没有
   if(!$query) {
     $GLOBALS['message'] = '查询过程失败';
@@ -61,7 +60,7 @@ function postadd() {
   //用一个变量接收上一次发生变化的行数
   $affected_rows = mysqli_affected_rows($conn);
   //如果改变的不是一行
-  if(!$affected_rows !== 1) {
+  if($affected_rows !== 1) {
     $GLOBALS['message'] = '添加数据失败';
     return;
   }

@@ -1,8 +1,9 @@
 <?php
 require 'config.php';
 echo SYSTEM_NAME;
-require 'config.php';
-echo SYSTEM_NAME;
+// require 'config.php';
+// echo SYSTEM_NAME;
+echo $i;
 // require_once 'config.php';
 
 // echo SYSTEM_NAME;
