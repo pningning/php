@@ -1,27 +1,8 @@
 <?php
-
-// 1. 建立连接
-$conn = mysqli_connect('localhost', 'root', '123456', 'dome3');
-
-mysqli_set_charset($conn, 'UTF8');
-
-if (!$conn) {
-  exit('<h1>连接数据库失败</h1>');
-}
-
-// 2. 开始查询
-$query = mysqli_query($conn, 'select * from users;');
-
-if (!$query) {
-  exit('<h1>查询数据失败</h1>');
-}
-
-// 3. 遍历结果集
-// while ($item = mysqli_fetch_assoc($query)) {
-//   $data[] = $item;
-// }
-
+  require_once 'query.php';
+  conn('select * from users;');
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +28,7 @@ if (!$query) {
     <table class="table table-hover">
       <thead>
         <tr>
+          <td>选项</td>
           <th>#</th>
           <th>头像</th>
           <th>姓名</th>
@@ -56,19 +38,20 @@ if (!$query) {
         </tr>
       </thead>
       <tbody>
-        <?php while ($item = mysqli_fetch_assoc($query)): ?>
-        <tr>
-          <th scope="row"><?php echo $item['id'] ?></th>
-          <td><img src="<?php echo $item['avatar']; ?>" class="rounded" alt="<?php echo $item['name']; ?>"></td>
-          <td><?php echo $item['name']; ?></td>
-          <td><?php echo $item['gender'] == 0 ? '♀' : '♂'; ?></td>
-          <td><?php echo $item['birthday']; ?></td>
-          <td class="text-center">
-            <a class="btn btn-info btn-sm" href="edit.php">编辑</a>
-            <a class="btn btn-danger btn-sm" href="delete.php?id=<?php echo $item['id'] ?>">删除</a>
+       <?php while($item = mysqli_fetch_assoc($query)): ?> 
+          <tr>
+          <td><input type="checkbox" value="true" ></td>
+            <th scope="row"><?php echo $item['id']; ?></th>
+            <td><img src="<?php echo $item['avatar']; ?>" class="rounded" alt="<?php echo $item['name']; ?>"></td>
+            <td><?php echo $item['name']; ?></td>
+            <td><?php echo $item['gender'] === '0' ? '女' : '男'; ?></td>
+            <td><?php echo $item['birthday']; ?></td>
+            <td class="text-center">
+            <a class="btn btn-info btn-sm" href="edit.php?id=<?php echo $item['id']; ?>">编辑</a>
+            <a class="btn btn-danger btn-sm" href="delete.php?id=<?php echo $item['id']; ?>">删除</a>
           </td>
-        </tr>
-        <?php endwhile ?>
+          </tr>
+       <?php endwhile ?>
       </tbody>
     </table>
     <ul class="pagination justify-content-center">

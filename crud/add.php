@@ -1,73 +1,84 @@
 <?php
 
-function image($obj) {
-  if(empty($_FILES[$obj])) {
-    $GLOBALS[$obj] = '请正确使用表格';
-    return;
-  }
-  $avatar = $_FILES[$obj];
-  if($avatar['error'] !== UPLOAD_ERR_OK) {
-    $GLOBALS['message'] = '请上传头像';
-    return;
-  }
-  if($avatar['size'] > 1 * 1024 * 1024) {
-    $GLOBALS['message'] = '头像图片太大了';
+function add_user() {
+  // 验证非空
+  if (empty($_POST['name'])) {
+    $GLOBALS['error_message'] = '请输入姓名';
     return;
   }
 
-  if(strpos($avatar['type'], 'image/') !== 0) {
-    $GLOBALS['message'] = '不支持此图片格式';
+  if (!(isset($_POST['gender']) && $_POST['gender'] !== '-1')) {
+    $GLOBALS['error_message'] = '请选择性别';
     return;
   }
 
-  $ext = pathinfo($avatar['name'], PATHINFO_EXTENSION);
-  $target = './uploads/' . uniqid() . '.' . $ext;
-  if(!move_uploaded_file($avatar['tmp_name'], $target)) {
-    $GLOBALS['message'] = '上传头像失败';
+  if (empty($_POST['birthday'])) {
+    $GLOBALS['error_message'] = '请输入日期';
     return;
   }
-}
-function add() {
-  //目标把接受提交的数据，把数据提交到数据库
-  //校验图片
-  // if(empty($_FILES['avatar'])) {
-  //   $GLOBALS['message'] = '请正确使用表格';
-  //   return;
-  // }
-  // $avatar = $_FILES['avatar'];
-  // if($avatar['error'] !== UPLOAD_ERR_OK) {
-  //   $GLOBALS['message'] = '请上传头像';
-  //   return;
-  // }
-  // if($avatar['size'] > 1 * 1024 * 1024) {
-  //   $GLOBALS['message'] = '头像图片太大了';
-  //   return;
-  // }
 
-  // if(strpos($avatar['type'], 'image/') !== 0) {
-  //   $GLOBALS['message'] = '不支持此图片格式';
-  //   return;
-  // }
+  // 取值
+  $name = $_POST['name'];
+  $gender = $_POST['gender'];
+  $birthday = $_POST['birthday'];
 
-  // $ext = pathinfo($avatar['name'], PATHINFO_EXTENSION);
-  // $target = './uploads/' . uniqid() . '.' . $ext;
-  // if(!move_uploaded_file($avatar['tmp_name'], $target)) {
-  //   $GLOBALS['message'] = '上传头像失败';
-  //   return;
-  // }
-  image('avatar');
+  // 接收文件并验证
+  if (empty($_FILES['avatar'])) {
+    $GLOBALS['error_message'] = '请上传头像';
+    return;
+  }
+
+  $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
+  // => jpg
+  $target = '../uploads/avatar-' . uniqid() . '.' . $ext;
+
+  if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $target)) {
+    $GLOBALS['error_message'] = '上传头像失败';
+    return;
+  }
+
+  $avatar = substr($target, 2);
+
+  // var_dump($name);
+  // var_dump($gender);
+  // var_dump($birthday);
+  // var_dump($avatar);
+  // 保存
+
+  // 1. 建立连接
+  $conn = mysqli_connect('localhost', 'root', '123456', 'dome3');
   
-  //校验文本
-  //把数据提交到数据库
-  //页面跳转
+  mysqli_set_charset($conn, 'UTF8');
 
+  if (!$conn) {
+    $GLOBALS['error_message'] = '连接数据库失败';
+    return;
+  }
+
+  // var_dump("insert into users values (null, '{$name}', {$gender}, '{$birthday}', '{$avatar}');");
+  // 2. 开始查询
+  $query = mysqli_query($conn, "insert into users values (null, '{$name}', {$gender}, '{$birthday}', '{$avatar}');");
+
+  if (!$query) {
+    $GLOBALS['error_message'] = '查询过程失败';
+    return;
+  }
+
+  $affected_rows = mysqli_affected_rows($conn);
+
+  if ($affected_rows !== 1) {
+    $GLOBALS['error_message'] = '添加数据失败';
+    return;
+  }
+
+  // 响应
+  header('Location: index.php');
 }
 
-
-
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-  add();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  add_user();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,12 +102,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   </nav>
   <main class="container">
     <h1 class="heading">添加用户</h1>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data" autocomplete="off">
-    <?php if(isset($message)): ?>
-      <div class="alert alert-warning">
-        <?php echo $message; ?>
-      </div>
+    <?php if (isset($error_message)): ?>
+    <div class="alert alert-warning">
+      <?php echo $error_message; ?>
+    </div>
     <?php endif ?>
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data" autocomplete="off">
       <div class="form-group">
         <label for="avatar">头像</label>
         <input type="file" class="form-control" id="avatar" name="avatar">
@@ -121,4 +132,4 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </main>
 </body>
-</html>-
+</html>

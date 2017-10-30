@@ -1,0 +1,5 @@
+<?php
+// SetCookie('key','abc');
+
+
+?>

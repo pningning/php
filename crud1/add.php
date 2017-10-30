@@ -1,81 +1,75 @@
-<?php 
-function postadd() {
-//验证表单是否为空
-  if(empty($_POST['name'])) {
-    $GLOBALS['message'] = '请输入姓名';
+<?php
+
+function image($obj) {
+  if(empty($_FILES[$obj])) {
+    $GLOBALS[$obj] = '请正确使用表格';
     return;
   }
-  if(!(isset($_POST['gender']) && $_POST['gender'] !== '-1')) {
-    $GLOBALS['message'] = '请选择性别';
-    return;
-  }
-  //验证日期
-  if(empty($_POST['birthday'])) {
-    $GLOBALS['message'] = '请输入日期';
-    return;
-  }
-  $name = $_POST['name'];
-  $gender = $_POST['gender'];
-  $birthday = $_POST['birthday'];
-//验证图片
-  if(empty($_FILES['avatar'])){
+  $avatar = $_FILES[$obj];
+  if($avatar['error'] !== UPLOAD_ERR_OK) {
     $GLOBALS['message'] = '请上传头像';
     return;
   }
-  $avatar = $_FILES['avatar'];
-  if($avatar['error'] !== UPLOAD_ERR_OK) {
-    $GLOBALS['message'] = '头像上传失败';
-    return;
-  }
   if($avatar['size'] > 1 * 1024 * 1024) {
-    $GLOBALS['message'] = '头像太大了';
+    $GLOBALS['message'] = '头像图片太大了';
     return;
   }
-  if(strpos($avatar['type'], 'image/') !== 0) {
-    $GLOBALS['message'] = '不支持上传图片的格式';
-    return;
-  }
-  $ext = pathinfo($avatar['name'],PATHINFO_EXTENSION);
 
+  if(strpos($avatar['type'], 'image/') !== 0) {
+    $GLOBALS['message'] = '不支持此图片格式';
+    return;
+  }
+  //从临时文件传到网络范围内
+  $ext = pathinfo($avatar['name'], PATHINFO_EXTENSION);
   $target = './uploads/' . uniqid() . '.' . $ext;
   if(!move_uploaded_file($avatar['tmp_name'], $target)) {
-    $GLOBALS['message'] = '头像上传失败';
+    $GLOBALS['message'] = '上传头像失败';
     return;
   }
-  $avatar = '/pages' .substr($target,1);
-//把数据上传到数据库
-  //1.建立链接
-  $conn = mysqli_connect('127.0.0.1', 'root', '123456', 'dome3');
-  if(!$conn) {
-    $GLOBALS['message'] = '链接数据库失败';
-    return;
-  }
-  mysqli_set_charset($conn, 'utf8');
-  //2.开始增加
-  $query = mysqli_query($conn, "insert into users values (null, '{$name}', '{$gender}', '{$birthday}', '{$avatar}');");
-  //如果增加的内容没有
-  if(!$query) {
-    $GLOBALS['message'] = '查询过程失败';
-    return;
-  }
-  //用一个变量接收上一次发生变化的行数
-  $affected_rows = mysqli_affected_rows($conn);
-  //如果改变的不是一行
-  if($affected_rows !== 1) {
-    $GLOBALS['message'] = '添加数据失败';
-    return;
-  }
-
-  header('Location: index.php');
 }
+function add() {
+  //目标把接受提交的数据，把数据提交到数据库
+  //校验图片
+  // if(empty($_FILES['avatar'])) {
+  //   $GLOBALS['message'] = '请正确使用表格';
+  //   return;
+  // }
+  // $avatar = $_FILES['avatar'];
+  // if($avatar['error'] !== UPLOAD_ERR_OK) {
+  //   $GLOBALS['message'] = '请上传头像';
+  //   return;
+  // }
+  // if($avatar['size'] > 1 * 1024 * 1024) {
+  //   $GLOBALS['message'] = '头像图片太大了';
+  //   return;
+  // }
+
+  // if(strpos($avatar['type'], 'image/') !== 0) {
+  //   $GLOBALS['message'] = '不支持此图片格式';
+  //   return;
+  // }
+
+  // $ext = pathinfo($avatar['name'], PATHINFO_EXTENSION);
+  // $target = './uploads/' . uniqid() . '.' . $ext;
+  // if(!move_uploaded_file($avatar['tmp_name'], $target)) {
+  //   $GLOBALS['message'] = '上传头像失败';
+  //   return;
+  // }
+  image('avatar');
+  
+  //校验文本
+
+  //把数据提交到数据库
+  //页面跳转
+
+}
+
 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-  postadd();
+  add();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,4 +122,4 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </main>
 </body>
-</html>
+</html>-
