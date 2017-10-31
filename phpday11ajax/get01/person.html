@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<ul id="oul">
+		
+	</ul>
+</body>
+	<script>
+		var oul = document.getElementById('oul');
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'json.php');
+		xhr.send();
+
+		xhr.onreadystatechange = function() {
+
+			if(this.readyState !== 4) return;
+			//获取json格式的字符串
+			// console.log(this.responseText);
+			//使用JSON.parse函数转换得到一个包含对象的数组
+			var data = JSON.parse(this.responseText);
+			//把获取到的信息渲染到页面上
+			for(var i = 0; i < data.length; i++) {
+				//创建li
+				var liElement = document.createElement('li');
+				liElement.innerHTML = data[i].name;
+				//把data的id作为liElement的属性存储一下
+				liElement.id = data[i].id;
+				oul.appendChild(liElement);
+				//给每个li添加单击事件
+				liElement.addEventListener('click', function() {
+
+					var xhr1 = new XMLHttpRequest();
+					xhr1.open('GET', 'json.php?id=' + this.id);
+					xhr1.send();
+					xhr1.onreadystatechange = function() {
+						if(this.readyState !== 4) return;
+						//得到一条json格式的对象，通过JSON.parse转换成一个对象
+						var obj = JSON.parse(this.responseText);
+
+						alert(obj.age);
+					}
+				})
+			}			
+		}
+
+
+
+	</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<td>用户名</td>
+			<td><input type="text" id="name"></td>
+		</tr>
+		<tr>
+			<td>密码</td>
+			<td><input type="password" id="password"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button id="btn">登录</button></td>
+		</tr>
+	</table>
+</body>
+	<script>
+		var btn = document.getElementById('btn');
+		var txtName = document.getElementById('name');
+		var txtPassword = document.getElementById('password');
+		//给按钮添加单击事件
+		btn.onclick = function() {
+			var name = txtName.value;
+			var password = txtPassword.value;
+			//通过xhr发送一个post请求
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'login.php');
+			//如果请其体是urlencoded格式，必须要设置响应头
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			//设置请求体
+			xhr.send(`name=${name}&password=${password}`);
+			xhr.onreadystatechange = function() {
+				if(this.readyState !== 4) return;
+				console.log(this.responseText);
+		
+			}
+		}
+	</script>
+</html>
