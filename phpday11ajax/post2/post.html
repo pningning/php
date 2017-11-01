@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<td>用户名</td>
+			<td><input type="text" id="name"></td>
+		</tr>
+		<tr>
+			<td>密码</td>
+			<td><input type="password" id="password"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button id="btn">登录</button></td>
+		</tr>
+	</table>
+</body>
+	<script>
+		var textName = document.getElementById('name');
+		var textPassword = document.getElementById('password');
+		var btn = document.getElementById('btn');
+		//当点击按钮的时候，验证密码
+		btn.onclick = function() {
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'login.php');
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+			xhr.send('name=' + textName.value + '&password=' + textPassword.value);
+			xhr.onreadystatechange = function() {
+				if(this.readyState !== 4) return;
+				console.log(this.responseText);
+			}
+		}
+	</script>
+</html>

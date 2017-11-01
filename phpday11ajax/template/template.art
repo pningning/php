@@ -1,0 +1,6 @@
+<script  src = "template-web.js" ></script>
+	<script  id = "tpl-user"  type = "text / html">
+	{{ if user }}
+		<h2> {{ user.name }}</h2>
+		{{ /if }}
+</script>
