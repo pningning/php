@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AJAX 动态表格渲染</title>
+</head>
+<body>
+	<table id="demo"></table>
+</body>
+	<script id="tmpl" type="text/x-art-temolate">
+	<!-- 准备模板 -->
+		{{each com}}
+			<tr>
+				<td>{{$value[0]}}</td>
+				<td>{{$value[1]}}</td>
+				<td>{{$value[2]}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	<script src="template-web.js"></script>
+	<script>
+		//使用模板的过程
+		/**
+		1.选择一个模板引擎
+		2.下载模板引擎js文件
+		3.引入到页面中
+		4.准备一个模板
+		5.准备一个数据
+		6.通过模板引擎的js提供的一个函数将模板和数据整合得到渲染结果HTML
+		7.将渲染结果的HTML，设置到默认的元素中*/
+		var xhr = new XMLHttpRequest()
+		xhr.open('GET', 'test.php')
+		xhr.send()
+		xhr.onreadystatechange = function() {
+			if(this.readyState !== 4) return
+				var res = JSON.parse(this.responseText)
+			console.log(res)
+			//模板所需数据
+			var context = { com: res.data }
+			console.log(res.data)
+			//借助模板引擎的API渲染数据
+			var html = template('tmpl', context)
+			document.getElementById('demo').innerHTML = html
+		}
+
+	</script>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>关于AJAX的封装</title>
+</head>
+<body>
+	
+</body>
+	<script>
+	/**
+	封装的套路
+	1.写一个相对比较完善的用例
+	2.写一个空函数，没有形参，将刚到的用例直接作为函数的函数体
+	3.根据使用过程中的需求抽象参数
+	*/
+	//##version 1===========================
+	// function ajax(method,url,params) {
+	// 	var xhr = new XMLHttpRequest()
+	// 	xhr.open(method, url)
+	// 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+	// 	//如果不需要传去请求体
+	// 	params = params || null
+	// 	xhr.send(params)
+	// 	xhr.onreadystatechange = function() {
+	// 	if(this.readyState !== 4) return
+	// 	console.log(this.responseText) 
+	// 	}
+	// }
+	// ajax('GET','time.php')
+	// ajax('POXT', 'time.php', 'value1=zs&age=19')
+
+	//## version 2========================
+	// function ajax(method,url,params) {
+	// 	var xhr = new XMLHttpRequest()
+	// 	if(method === 'GET') {
+	// 		url += '?' + params
+	// 	}
+
+	// 	xhr.open(method, url)
+	// 	var data = null
+
+	// 	if(method === 'POST') {
+	// 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+	// 		data = params
+	// 	}
+		
+	// 	xhr.send(params)
+	// 	xhr.onreadystatechange = function() {
+	// 	if(this.readyState !== 4) return
+	// 	console.log(this.responseText) 
+	// 	}
+	// }
+	// ajax('GET','time.php', 'value=haha')
+	// ajax('POXT', 'time.php', 'value1=zs&age=19')
+
+	//## version 3==============================
+	function ajax(method,url,params) {
+		// console.log(params);
+		var xhr = new XMLHttpRequest()
+		if(typeof params === 'object') {
+			//创建一个新数组
+			var tempArr = []
+			for(var key in params) {
+			//把对象的值存到变量里
+			var value = params[key]
+			console.log(value)
+			//把键加对应值的方式添加到数组中
+			tempArr.push(key + '=' + value)
+			console.log(tempArr)
+			
+		}
+		//tempArr => ['key1=value1','key2=value2']
+			//把数组转换成字符串
+			params = tempArr.join('&')
+			// console.log(params)
+
+		}
+		if(method === 'GET') {
+			url += '?' + params
+		}
+
+		xhr.open(method, url)
+		var data = null
+
+		if(method === 'POST') {
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+			data = params
+		}
+		
+		xhr.send(params)
+		xhr.onreadystatechange = function() {
+		if(this.readyState !== 4) return
+		console.log(this.responseText) 
+		}
+	}
+	// ajax('GET','time.php', {id: 1})
+	ajax('POST', 'time.php', {key1: 'value1', key2: 'value2',key3: 'value3'})
+	</script>
+</html>
