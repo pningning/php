@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>关于AJAX的封装</title>
+</head>
+<body>
+	
+</body>
+	<script>
+	function ajax(method,url,params,done) {
+		//把method转换成大写
+		method = method.toUpperCase()
+		// console.log(params);
+		var xhr = new XMLHttpRequest()
+		if(typeof params === 'object') {
+			//创建一个新数组
+			var tempArr = []
+			for(var key in params) {
+			//把对象的值存到变量里
+			var value = params[key]
+
+			//把键加对应值的方式添加到数组中
+			tempArr.push(key + '=' + value)
+
+			
+			}
+		//tempArr => ['key1=value1','key2=value2']
+			//把数组转换成字符串
+			params = tempArr.join('&')
+			// console.log(params)
+		}
+
+		if(method === 'GET') {
+			url += '?' + params
+		}
+
+		xhr.open(method, url)
+		var data = null
+
+		if(method === 'POST') {
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+			data = params
+		}
+		
+		xhr.send(data)
+		xhr.onreadystatechange = function() {
+		if(this.readyState !== 4) return
+		done(this.responseText)
+		}
+		
+	}
+	var onDone = function(res) {
+		console.log('好了')
+		console.log(res)
+	}
+	// ajax('GET','time.php', {id: 1})
+	ajax('POST', 'time.php', {key1: 'value1', key2: 'value2',key3: 'value3'}, onDone)
+	</script>
+</html>

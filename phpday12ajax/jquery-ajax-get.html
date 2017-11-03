@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jquery-ajax-get</title>
+	<style>
+.loading {
+      display: none;
+      position: fixed;
+      
+    }
+	</style>
+</head>
+
+<body>
+    <div class="loading">正在玩命加载中...</div>
+    <button id="btn">请求</button>
+	<script src="jquery.js"></script>
+	<script>
+		$(document)
+		.ajaxStart(function() {
+			$('.loading').fadeIn();
+		})
+		.ajaxStop(function() {
+			$('.loading').fadeOut();
+			console.log('over');
+		})
+
+		$('#btn').on('click',function() {
+			$.get('time.php');
+		})
+
+
+	</script>
+</body>
+</html>
+
+
